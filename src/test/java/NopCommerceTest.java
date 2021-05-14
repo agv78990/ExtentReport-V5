@@ -19,45 +19,51 @@ import com.aventstack.extentreports.Status;
 
 import com.aventstack.extentreports.reporter.configuration.Theme;
     import org.testng.reporters.Files;
+    import utils.Base;
 
-    public class NopCommerceTest {
+    public class NopCommerceTest extends Base {
         private static Files FileUtils;
         public WebDriver driver;
-        public ExtentSparkReporter spark;
-        public ExtentReports extent;
-        public ExtentTest test;
+        // public ExtentSparkReporter spark;
+        // public ExtentReports extent;
+        // public ExtentTest test;
 
-        @BeforeTest
+        /**  @BeforeTest
         public void setExtent() {
-            // specify location of the report
-            //htmlReporter = new ExtentHtmlReporter(System.getProperty("user.dir") + "/test-output/myReport.html");
-            ExtentSparkReporter spark = new ExtentSparkReporter("Spark.html");
+        // specify location of the report
+        //htmlReporter = new ExtentHtmlReporter(System.getProperty("user.dir") + "/test-output/myReport.html");
+        ExtentSparkReporter spark = new ExtentSparkReporter("Spark.html");
 
-            spark.config().setDocumentTitle("Automation Report"); // Tile of report
-            spark.config().setReportName("Functional Testing"); // Name of the report
-            spark.config().setTheme(Theme.DARK);
-
-
-            extent = new ExtentReports();
-            extent.attachReporter(spark);
+        spark.config().setDocumentTitle("Automation Report"); // Tile of report
+        spark.config().setReportName("Functional Testing"); // Name of the report
+        spark.config().setTheme(Theme.DARK);
 
 
-            // Passing General information
-            extent.setSystemInfo("Host name", "localhost");
-            extent.setSystemInfo("Environemnt", "QA");
-            extent.setSystemInfo("user", "huma");
+        extent = new ExtentReports();
+        extent.attachReporter(spark);
+
+
+        // Passing General information
+        extent.setSystemInfo("Host name", "localhost");
+        extent.setSystemInfo("operating system",System.getProperty("os.name"));
+        extent.setSystemInfo("OS version",System.getProperty("os.version"));
+        extent.setSystemInfo("OS Arch Model",System.getProperty("os.arch"));
+        extent.setSystemInfo("Environemnt", "QA");
+        extent.setSystemInfo("user", "huma");
+
+        extent.setSystemInfo("JAVA VERSION",System.getProperty("java.runtime.version"));
         }
 
-        @AfterTest
-        public void endReport() {
-            extent.flush();
-        }
+         @AfterTest
+         public void endReport() {
+         extent.flush();
+         }  **/
 
         @BeforeMethod
         public void setup() {
 
 
-            System.setProperty("webdriver.chrome.driver", "C:\\Users\\avaho\\IdeaProjects\\I\\TechnicalSupport\\Drivers\\chromedriver.exe");
+            System.setProperty("webdriver.chrome.driver", "C:\\Users\\avaho\\IdeaProjects\\I\\ExtentReportV5\\Drivers\\chromedriver.exe");
             driver = new ChromeDriver();
             driver.manage().window().maximize();
             driver.get("http://demo.nopcommerce.com/");
@@ -66,7 +72,9 @@ import com.aventstack.extentreports.reporter.configuration.Theme;
         //Test1
         @Test
         public void noCommerceTitleTest() {
-            test = extent.createTest("noCommerceTitleTest");
+            ExtentTest test = extent.createTest("noCommerceTitleTest");
+            test.log(Status.PASS, "Test 01");
+            test.log(Status.INFO,"original code");
             String title = driver.getTitle();
             System.out.println(title);
             Assert.assertEquals(title, "eCommerce demo store");
@@ -75,15 +83,16 @@ import com.aventstack.extentreports.reporter.configuration.Theme;
         //Test2
         @Test
         public void noCommerceLogoTest() {
-            test = extent.createTest("noCommerceLogoTest");
+            ExtentTest  test = extent.createTest("noCommerceLogoTest");
             boolean b = driver.findElement(By.xpath("//img[@alt='nopCommerce demo store']")).isDisplayed();
             Assert.assertTrue(b);
+            test.log(Status.PASS, "Test 01");
         }
 
         //Test3
         @Test
         public void noCommerceLoginTest() {
-            test = extent.createTest("noCommerceLoginTest");
+            ExtentTest test = extent.createTest("noCommerceLoginTest");
 
             test.createNode("Login with Valid input");
             Assert.assertTrue(true);
@@ -94,21 +103,27 @@ import com.aventstack.extentreports.reporter.configuration.Theme;
 
         }
 
-        @AfterMethod
+        /**  @AfterMethod
         public void tearDown(ITestResult result) throws IOException {
-            if (result.getStatus() == ITestResult.FAILURE) {
-                test.log(Status.FAIL, "TEST CASE FAILED IS " + result.getName()); // to add name in extent report
-                test.log(Status.FAIL, "TEST CASE FAILED IS " + result.getThrowable()); // to add error/exception in extent report
-                //String screenshotPath = NopCommerceTest.getScreenshot(driver, result.getName());
-                String screenshotPath = NopCommerceTest.getScreenshot(driver, result.getName());
-                test.addScreenCaptureFromPath(screenshotPath);// adding screen shot
-            } else if (result.getStatus() == ITestResult.SKIP) {
-                test.log(Status.SKIP, "Test Case SKIPPED IS " + result.getName());
-            } else if (result.getStatus() == ITestResult.SUCCESS) {
-                test.log(Status.PASS, "Test Case PASSED IS " + result.getName());
-            }
+        if (result.getStatus() == ITestResult.FAILURE) {
+        ExtentTest test;
+        test.log(Status.FAIL, "TEST CASE FAILED IS " + result.getName()); // to add name in extent report
+        test.log(Status.FAIL, "TEST CASE FAILED IS " + result.getThrowable()); // to add error/exception in extent report
+        //String screenshotPath = NopCommerceTest.getScreenshot(driver, result.getName());
+        String screenshotPath = NopCommerceTest.getScreenshot(driver, result.getName());
+        test.addScreenCaptureFromPath(screenshotPath);// adding screen shot
+        } else if (result.getStatus() == ITestResult.SKIP) {
+        test.log(Status.SKIP, "Test Case SKIPPED IS " + result.getName());
+        } else if (result.getStatus() == ITestResult.SUCCESS) {
+        test.log(Status.PASS, "Test Case PASSED IS " + result.getName());
+        } **/
+        //  driver.quit();
+        @AfterMethod
+        public void closePAges() {
             driver.quit();
         }
+
+
 
         public static String getScreenshot(WebDriver driver, String screenshotName) throws IOException {
             String dateName = new SimpleDateFormat("yyyyMMddhhmmss").format(new Date());
